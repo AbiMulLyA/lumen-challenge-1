@@ -19,18 +19,18 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->get('/author', 'AuthorController@showAll');
     $router->get('/author/{id}', 'AuthorController@showId');
     $router->post('/author', 'AuthorController@add');
-    $router->put('/author/{id}', 'AuthorController@update');
+    $router->patch('/author/{id}', 'AuthorController@update');
     $router->delete('/author/{id}', 'AuthorController@delete');
 
     $router->get('/post', 'PostController@showAll');
     $router->get('/post/{id}', 'PostController@showId');
     $router->post('/post', 'PostController@add');
-    $router->put('/post/{id}', 'PostController@update');
+    $router->patch('/post/{id}', 'PostController@update');
     $router->delete('/post/{id}', 'PostController@delete');
 
     $router->get('/comment', 'CommentController@showAll');
     $router->get('/comment/{id}', 'CommentController@showId');
     $router->post('/comment', 'CommentController@add');
-    $router->put('/comment/{id}', 'CommentController@update');
+    $router->patch('/comment/{id}', 'CommentController@update');
     $router->delete('/comment/{id}', 'CommentController@delete');
 });
