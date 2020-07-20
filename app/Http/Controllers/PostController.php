@@ -60,7 +60,7 @@ class PostController extends Controller
     {
         $post = [
             [
-                "id" => 3,
+                "id" => $id,
                 "title" => "Jalan di Sore Hari",
                 "content" => "Perjalanan",
                 "tags" => "Jalan",

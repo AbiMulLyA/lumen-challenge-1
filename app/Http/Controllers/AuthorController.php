@@ -46,7 +46,7 @@ class AuthorController extends Controller
     {
         $author = [
             [
-                "id" => 1,
+                "id" => $id,
                 "username" => "Bret",
                 "password" => "bret123",
                 "salt" => "1",
