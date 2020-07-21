@@ -15,22 +15,26 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'api/v1'], function () use ($router) {
-    $router->get('/author', 'AuthorController@showAll');
-    $router->get('/author/{id}', 'AuthorController@showId');
-    $router->post('/author', 'AuthorController@add');
-    $router->patch('/author/{id}', 'AuthorController@update');
-    $router->delete('/author/{id}', 'AuthorController@delete');
+$router->post('/api/v1/auth', 'AuthController@authenticate');
 
-    $router->get('/post', 'PostController@showAll');
-    $router->get('/post/{id}', 'PostController@showId');
-    $router->post('/post', 'PostController@add');
-    $router->patch('/post/{id}', 'PostController@update');
-    $router->delete('/post/{id}', 'PostController@delete');
-
-    $router->get('/comment', 'CommentController@showAll');
-    $router->get('/comment/{id}', 'CommentController@showId');
-    $router->post('/comment', 'CommentController@add');
-    $router->patch('/comment/{id}', 'CommentController@update');
-    $router->delete('/comment/{id}', 'CommentController@delete');
+$router->group(['middleware' => 'authjwt'], function () use ($router) {
+    $router->group(['prefix' => 'api/v1'], function () use ($router) {
+        $router->get('/author', 'AuthorController@showAll');
+        $router->get('/author/{id}', 'AuthorController@showId');
+        $router->post('/author', 'AuthorController@add');
+        $router->patch('/author/{id}', 'AuthorController@update');
+        $router->delete('/author/{id}', 'AuthorController@delete');
+    
+        $router->get('/post', 'PostController@showAll');
+        $router->get('/post/{id}', 'PostController@showId');
+        $router->post('/post', 'PostController@add');
+        $router->patch('/post/{id}', 'PostController@update');
+        $router->delete('/post/{id}', 'PostController@delete');
+    
+        $router->get('/comment', 'CommentController@showAll');
+        $router->get('/comment/{id}', 'CommentController@showId');
+        $router->post('/comment', 'CommentController@add');
+        $router->patch('/comment/{id}', 'CommentController@update');
+        $router->delete('/comment/{id}', 'CommentController@delete');
+    });
 });
