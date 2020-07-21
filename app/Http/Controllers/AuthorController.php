@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AuthorController extends Controller
 {
@@ -37,6 +38,8 @@ class AuthorController extends Controller
             ]
         ];
 
+        Log::info('Showing all author');
+
         return response()->json([
             "results" => $author
         ]);
@@ -54,6 +57,8 @@ class AuthorController extends Controller
                 "profile" => "Kulas Light"
             ]
         ];
+
+        Log::info('Showing author by id');
 
         return response()->json([
             "results" => $author
@@ -86,6 +91,8 @@ class AuthorController extends Controller
                 "profile" => $profile
             ]
         ];
+
+        Log::info('Adding author');
 
         return response()->json([
             "message" => "Success Added",
@@ -120,6 +127,8 @@ class AuthorController extends Controller
             ]
         ];
 
+        Log::info('Updating author by id');
+
         return response()->json([
             "message" => "Success Updated",
             "results" => $author
@@ -128,6 +137,8 @@ class AuthorController extends Controller
 
     public function delete($id)
     {
+        Log::info('Deleting author by id');
+
         return response()->json([
             "message" => "Success Deleted",
             "results" => [

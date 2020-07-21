@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
@@ -51,6 +52,8 @@ class CommentController extends Controller
             ]
         ];
 
+        Log::info('Showing all comment');
+
         return response()->json([
             "results" => $comment
         ]);
@@ -70,6 +73,8 @@ class CommentController extends Controller
                 "post_id" => 2,
             ]
         ];
+
+        Log::info('Showing comment by id');
 
         return response()->json([
             "results" => $comment
@@ -108,6 +113,8 @@ class CommentController extends Controller
                 "post_id" => $post_id,
             ]
         ];
+
+        Log::info('Adding comment');
 
         return response()->json([
             "message" => "Success Added",
@@ -148,6 +155,8 @@ class CommentController extends Controller
             ]
         ];
 
+        Log::info('Updating comment by id');
+
         return response()->json([
             "message" => "Success Updated",
             "results" => $comment
@@ -156,6 +165,8 @@ class CommentController extends Controller
 
     public function delete($id)
     {
+        Log::info('Deleting comment by id');
+
         return response()->json([
             "message" => "Success Deleted",
             "results" => [

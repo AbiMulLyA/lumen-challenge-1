@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -51,6 +52,8 @@ class PostController extends Controller
             ]
         ];
 
+        Log::info('Showing all post');
+
         return response()->json([
             "results" => $post
         ]);
@@ -70,6 +73,8 @@ class PostController extends Controller
                 "author_id" => 3,
             ]
         ];
+
+        Log::info('Showing post by id');
 
         return response()->json([
             "results" => $post
@@ -108,6 +113,8 @@ class PostController extends Controller
                 "author_id" => $author_id,
             ],
         ];
+
+        Log::info('Adding post');
 
         return response()->json([
             "message" => "Success Added",
@@ -148,6 +155,8 @@ class PostController extends Controller
             ],
         ];
 
+        Log::info('Updating post by id');
+
         return response()->json([
             "message" => "Success Updated",
             "results" => $post
@@ -156,6 +165,8 @@ class PostController extends Controller
 
     public function delete($id)
     {
+        Log::info('Deleting post by id');
+
         return response()->json([
             "message" => "Success Deleted",
             "results" => [
