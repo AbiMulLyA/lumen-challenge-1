@@ -41,7 +41,11 @@ class CommentController extends Controller
 
     public function showId($id)
     {
-        $data = Comment::find($id);
+        $data = Comment::find($id)->with(array('author'=>function($query){
+            $query->select();
+        }))->with(array('post'=>function($query){
+            $query->select();
+        }))->get();;
         if(!$data) {
             return response()->json([
                 "message" => "Parameter Not Found"

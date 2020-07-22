@@ -40,7 +40,9 @@ class PostController extends Controller
 
     public function showId($id)
     {
-        $data = Post::find($id);
+        $data = Post::find($id)->with(array('author'=>function($query){
+                    $query->select();
+                }))->get();
         if(!$data) {
             return response()->json([
                 "message" => "Parameter Not Found"

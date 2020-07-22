@@ -19,7 +19,7 @@ class CreatePostsTable extends Migration
             $table->string('content');
             $table->string('tags');
             $table->string('status');
-            $table->string('author_id')->unsigned();
+            $table->string('author_id');
             $table->timestamps();
         });
     }
