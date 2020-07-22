@@ -60,10 +60,10 @@ class CommentController extends Controller
         $this->validate($request, [
             'content' => 'required',
             'status' => 'required',
-            'author_id' => 'required',
+            'author_id' => 'required|exists:authors,id',
             'email' => 'required',
             'url' => 'required',
-            'post_id' => 'required',
+            'post_id' => 'required|exists:posts,id',
         ]);
     
         $data = new Comment();
@@ -88,10 +88,10 @@ class CommentController extends Controller
         $this->validate($request, [
             'content' => 'required',
             'status' => 'required',
-            'author_id' => 'required',
+            'author_id' => 'required|exists:authors,id',
             'email' => 'required',
             'url' => 'required',
-            'post_id' => 'required',
+            'post_id' => 'required|exists:posts,id',
         ]);
     
         $data = Comment::find($id);

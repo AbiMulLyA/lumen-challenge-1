@@ -61,7 +61,7 @@ class PostController extends Controller
             'content' => 'required',
             'tags' => 'required',
             'status' => 'required',
-            'author_id' => 'required',
+            'author_id' => 'required|exists:authors,id',
         ]);
     
         $data = new Post();
@@ -87,7 +87,7 @@ class PostController extends Controller
             'content' => 'required',
             'tags' => 'required',
             'status' => 'required',
-            'author_id' => 'required',
+            'author_id' => 'required|exists:authors,id',
         ]);
     
         $data = Post::find($id);
