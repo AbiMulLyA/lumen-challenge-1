@@ -37,7 +37,7 @@ class AuthJwtMiddleware
                     'error' => 'An error while decoding token.'
                 ], 400);
             }else {
-                Log::info('Access Success');
+                Log::info('Token has been provided');
                 
                 return $next($request);
             }
