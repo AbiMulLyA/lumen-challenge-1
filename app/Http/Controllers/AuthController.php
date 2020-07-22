@@ -6,6 +6,7 @@ use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Firebase\JWT\ExpiredException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -41,6 +42,8 @@ class AuthController extends Controller
         
         $email = $request->input('email');
         $password = $request->input('password');
+
+        Log::info('Generate Token For Auth');
 
         return response()->json([
             'data' => [
