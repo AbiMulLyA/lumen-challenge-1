@@ -21,7 +21,11 @@ class CommentController extends Controller
 
     public function showAll()
     {
-        $data = Comment::all();
+        $data = Comment::with(array('author'=>function($query){
+                    $query->select();
+                }))->with(array('post'=>function($query){
+                    $query->select();
+                }))->get();
         if(!$data) {
             return response()->json([
                 "message" => "Data Not Found"

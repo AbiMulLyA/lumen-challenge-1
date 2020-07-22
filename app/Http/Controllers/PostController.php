@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\DB;
 use App\Post;
 
 class PostController extends Controller
@@ -21,7 +22,9 @@ class PostController extends Controller
 
     public function showAll()
     {
-        $data = Post::all();
+        $data = Post::with(array('author'=>function($query){
+                    $query->select();
+                }))->get();
         if(!$data) {
             return response()->json([
                 "message" => "Data Not Found"
