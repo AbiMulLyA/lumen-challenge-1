@@ -19,6 +19,12 @@ $router->post('/api/v1/auth', 'AuthController@authenticate');
 
 $router->group(['middleware' => 'authjwt'], function () use ($router) {
     $router->group(['prefix' => 'api/v1'], function () use ($router) {
+        $router->get('/user', 'UserController@showAll');
+        $router->get('/user/{id}', 'UserController@showId');
+        $router->post('/user', 'UserController@add');
+        $router->patch('/user/{id}', 'UserController@update');
+        $router->delete('/user/{id}', 'UserController@delete');
+
         $router->get('/author', 'AuthorController@showAll');
         $router->get('/author/{id}', 'AuthorController@showId');
         $router->post('/author', 'AuthorController@add');

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+use App\Comment;
+
 class CommentController extends Controller
 {
     /**
@@ -19,65 +21,33 @@ class CommentController extends Controller
 
     public function showAll()
     {
-        $comment = [
-            [
-                "id" => 1,
-                "content" => "Perjalanan",
-                "status" => "Active",
-                "create_time" => "2020-08-26",
-                "author_id" => 1,
-                "email" => "gunda@gmail.com",
-                "url" => "http://letsblog081.blogspot.com/",
-                "post_id" => 1,
-            ],
-            [
-                "id" => 2,
-                "content" => "Perkampungan",
-                "status" => "Active",
-                "create_time" => "2020-08-27",
-                "author_id" => 1,
-                "email" => "bajah@gmail.com",
-                "url" => "http://letsblog081.blogspot.com/",
-                "post_id" => 2,
-            ],
-            [
-                "id" => 3,
-                "content" => "Perpulangan",
-                "status" => "Non Active",
-                "create_time" => "2020-08-28",
-                "author_id" => 1,
-                "email" => "yuja@gmail.com",
-                "url" => "http://letsblog081.blogspot.com/",
-                "post_id" => 1,
-            ]
-        ];
+        $data = Comment::all();
+        if(!$data) {
+            return response()->json([
+                "message" => "Data Not Found"
+            ]);
+        }
 
         Log::info('Showing all comment');
 
         return response()->json([
-            "results" => $comment
+            "results" => $data
         ]);
     }
 
     public function showId($id)
     {
-        $comment = [
-            [
-                "id" => $id,
-                "content" => "Perkampungan",
-                "status" => "Active",
-                "create_time" => "2020-08-27",
-                "author_id" => 1,
-                "email" => "bajah@gmail.com",
-                "url" => "http://letsblog081.blogspot.com/",
-                "post_id" => 2,
-            ]
-        ];
+        $data = Comment::find($id);
+        if(!$data) {
+            return response()->json([
+                "message" => "Parameter Not Found"
+            ]);
+        }
 
         Log::info('Showing comment by id');
 
         return response()->json([
-            "results" => $comment
+            "results" => $data
         ]);
     }
 
@@ -86,39 +56,26 @@ class CommentController extends Controller
         $this->validate($request, [
             'content' => 'required',
             'status' => 'required',
-            'create_time' => 'required',
             'author_id' => 'required',
             'email' => 'required',
             'url' => 'required',
             'post_id' => 'required',
         ]);
     
-        $content = $request->input('content');
-        $status = $request->input('status');
-        $create_time = $request->input('create_time');
-        $author_id = $request->input('author_id');
-        $email = $request->input('email');
-        $url = $request->input('url');
-        $post_id = $request->input('post_id');
-
-        $comment = [
-            [
-                "id" => rand(10, 100),
-                "content" => $content,
-                "status" => $status,
-                "create_time" => $create_time,
-                "author_id" => $author_id,
-                "email" => $email,
-                "url" => $url,
-                "post_id" => $post_id,
-            ]
-        ];
+        $data = new Comment();
+        $data->content = $request->input('content');
+        $data->status = $request->input('status');
+        $data->author_id = $request->input('author_id');
+        $data->email = $request->input('email');
+        $data->url = $request->input('url');
+        $data->post_id = $request->input('post_id');
+        $data->save();
 
         Log::info('Adding comment');
 
         return response()->json([
             "message" => "Success Added",
-            "results" => $comment
+            "results" => $data
         ]);
     }
 
@@ -127,51 +84,52 @@ class CommentController extends Controller
         $this->validate($request, [
             'content' => 'required',
             'status' => 'required',
-            'create_time' => 'required',
             'author_id' => 'required',
             'email' => 'required',
             'url' => 'required',
             'post_id' => 'required',
         ]);
     
-        $content = $request->input('content');
-        $status = $request->input('status');
-        $create_time = $request->input('create_time');
-        $author_id = $request->input('author_id');
-        $email = $request->input('email');
-        $url = $request->input('url');
-        $post_id = $request->input('post_id');
+        $data = Comment::find($id);
+        if ($data) {
+            $data->content = $request->input('content');
+            $data->status = $request->input('status');
+            $data->author_id = $request->input('author_id');
+            $data->email = $request->input('email');
+            $data->url = $request->input('url');
+            $data->post_id = $request->input('post_id');
+            $data->save();
 
-        $comment = [
-            [
-                "id" => $id,
-                "content" => $content,
-                "status" => $status,
-                "create_time" => $create_time,
-                "author_id" => $author_id,
-                "email" => $email,
-                "url" => $url,
-                "post_id" => $post_id,
-            ]
-        ];
+            Log::info('Updating comment by id');
 
-        Log::info('Updating comment by id');
-
-        return response()->json([
-            "message" => "Success Updated",
-            "results" => $comment
-        ]);        
+            return response()->json([
+                "message" => "Success Updated",
+                "results" => $data
+            ]);
+        }else {
+            return response()->json([
+                "message" => "Parameter Not Found"
+            ]);
+        }
+                
     }
 
     public function delete($id)
     {
-        Log::info('Deleting comment by id');
+        $data = Comment::find($id);
+        if($data) {
+            $data->delete();
 
-        return response()->json([
-            "message" => "Success Deleted",
-            "results" => [
-                "id" => $id
-            ]
-        ]);    
+            Log::info('Deleting comment by id');
+
+            return response()->json([
+                "message" => "Success Deleted",
+                "results" => $data
+            ]);   
+        }else {
+            return response()->json([
+                "message" => "Parameter Not Found"
+            ]);
+        }    
     }
 }

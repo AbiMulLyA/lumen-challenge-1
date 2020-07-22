@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+use App\Post;
+
 class PostController extends Controller
 {
     /**
@@ -19,65 +21,33 @@ class PostController extends Controller
 
     public function showAll()
     {
-        $post = [
-            [
-                "id" => 1,
-                "title" => "Jalan di Pagi Hari",
-                "content" => "Perjalanan",
-                "tags" => "Jalan",
-                "status" => "Active",
-                "create_time" => "2020-08-26",
-                "update_time" => "2020-08-27",
-                "author_id" => 1,
-            ],
-            [
-                "id" => 2,
-                "title" => "Jalan di Siang Hari",
-                "content" => "Perjalanan",
-                "tags" => "Jalan",
-                "status" => "Active",
-                "create_time" => "2020-08-26",
-                "update_time" => "2020-08-27",
-                "author_id" => 2,
-            ],
-            [
-                "id" => 3,
-                "title" => "Jalan di Sore Hari",
-                "content" => "Perjalanan",
-                "tags" => "Jalan",
-                "status" => "Non Active",
-                "create_time" => "2020-08-26",
-                "update_time" => "2020-08-27",
-                "author_id" => 3,
-            ]
-        ];
+        $data = Post::all();
+        if(!$data) {
+            return response()->json([
+                "message" => "Data Not Found"
+            ]);
+        }
 
         Log::info('Showing all post');
 
         return response()->json([
-            "results" => $post
+            "results" => $data
         ]);
     }
 
     public function showId($id)
     {
-        $post = [
-            [
-                "id" => $id,
-                "title" => "Jalan di Sore Hari",
-                "content" => "Perjalanan",
-                "tags" => "Jalan",
-                "status" => "Non Active",
-                "create_time" => "2020-08-26",
-                "update_time" => "2020-08-27",
-                "author_id" => 3,
-            ]
-        ];
+        $data = Post::find($id);
+        if(!$data) {
+            return response()->json([
+                "message" => "Parameter Not Found"
+            ]);
+        }
 
         Log::info('Showing post by id');
 
         return response()->json([
-            "results" => $post
+            "results" => $data
         ]);
     }
 
@@ -88,37 +58,22 @@ class PostController extends Controller
             'content' => 'required',
             'tags' => 'required',
             'status' => 'required',
-            'create_time' => 'required',
-            'update_time' => 'required',
             'author_id' => 'required',
         ]);
     
-        $title = $request->input('title');
-        $content = $request->input('content');
-        $tags = $request->input('tags');
-        $status = $request->input('status');
-        $create_time = $request->input('create_time');
-        $update_time = $request->input('update_time');
-        $author_id = $request->input('author_id');
-
-        $post = [
-            [
-                "id" => rand(10, 100),
-                "title" => $title,
-                "content" => $content,
-                "tags" => $tags,
-                "status" => $status,
-                "create_time" => $create_time,
-                "update_time" => $update_time,
-                "author_id" => $author_id,
-            ],
-        ];
+        $data = new Post();
+        $data->title = $request->input('title');
+        $data->content = $request->input('content');
+        $data->tags = $request->input('tags');
+        $data->status = $request->input('status');
+        $data->author_id = $request->input('author_id');
+        $data->save();
 
         Log::info('Adding post');
 
         return response()->json([
             "message" => "Success Added",
-            "results" => $post
+            "results" => $data
         ]);
     }
 
@@ -129,49 +84,48 @@ class PostController extends Controller
             'content' => 'required',
             'tags' => 'required',
             'status' => 'required',
-            'create_time' => 'required',
-            'update_time' => 'required',
             'author_id' => 'required',
         ]);
     
-        $title = $request->input('title');
-        $content = $request->input('content');
-        $tags = $request->input('tags');
-        $status = $request->input('status');
-        $create_time = $request->input('create_time');
-        $update_time = $request->input('update_time');
-        $author_id = $request->input('author_id');
+        $data = Post::find($id);
+        if ($data) {
+            $data->title = $request->input('title');
+            $data->content = $request->input('content');
+            $data->tags = $request->input('tags');
+            $data->status = $request->input('status');
+            $data->author_id = $request->input('author_id');
+            $data->save();
 
-        $post = [
-            [
-                "id" => $id,
-                "title" => $title,
-                "content" => $content,
-                "tags" => $tags,
-                "status" => $status,
-                "create_time" => $create_time,
-                "update_time" => $update_time,
-                "author_id" => $author_id,
-            ],
-        ];
+            Log::info('Updating post by id');
 
-        Log::info('Updating post by id');
-
-        return response()->json([
-            "message" => "Success Updated",
-            "results" => $post
-        ]);        
+            return response()->json([
+                "message" => "Success Updated",
+                "results" => $data
+            ]);        
+        }else {
+            return response()->json([
+                "message" => "Parameter Not Found"
+            ]);
+        }
+        
     }
 
     public function delete($id)
     {
-        Log::info('Deleting post by id');
+        $data = Post::find($id);
+        if($data) {
+            $data->delete();
 
-        return response()->json([
-            "message" => "Success Deleted",
-            "results" => [
-                "id" => $id
-            ]
-        ]);    
+            Log::info('Deleting post by id');
+
+            return response()->json([
+                "message" => "Success Deleted",
+                "results" => $data
+            ]);   
+        }else {
+            return response()->json([
+                "message" => "Parameter Not Found"
+            ]);
+        }    
     }
 }

@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Author;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\User;
 
-class AuthorController extends Controller
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
+
+use Image;
+
+class UserController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -20,55 +25,41 @@ class AuthorController extends Controller
 
     public function showAll()
     {
-        $data = Author::all();
+        $data = User::all();
         if(!$data) {
             return response()->json([
                 "message" => "Data Not Found"
             ]);
         }
 
-        Log::info('Showing all author');
-
-        return response()->json([
-            "results" => $data
-        ]);
+        return response()->json($data);
     }
 
     public function showId($id)
     {
-        $data = Author::find($id);
+        $data = User::find($id);
         if(!$data) {
             return response()->json([
                 "message" => "Parameter Not Found"
             ]);
         }
 
-        Log::info('Showing author by id');
-
-        return response()->json([
-            "results" => $data
-        ]);
+        return response()->json($data);
     }
 
     public function add(Request $request)
     {
         $this->validate($request, [
-            'username' => 'required',
-            'password' => 'required',
-            'salt' => 'required',
-            'email' => 'required',
-            'profile' => 'required',
+            'name' => 'required|string',
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:6',
         ]);
-        
-        $data = new Author();
-        $data->username = $request->input('username');
-        $data->password = $request->input('password');
-        $data->salt = $request->input('salt');
-        $data->email = $request->input('email');
-        $data->profile = $request->input('profile');
-        $data->save();
 
-        Log::info('Adding author');
+        $data = new User();
+        $data->name = $request->input('name');
+        $data->email = $request->input('email');
+        $data->password = Hash::make($request->input('password'));
+        $data->save();
 
         return response()->json([
             "message" => "Success Added",
@@ -79,52 +70,43 @@ class AuthorController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'username' => 'required',
-            'password' => 'required',
-            'salt' => 'required',
-            'email' => 'required',
-            'profile' => 'required',
+            'name' => 'required|string',
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:6',
         ]);
         
-        $data = Author::find($id);
-        if ($data) {
-            $data->username = $request->input('username');
-            $data->password = $request->input('password');
-            $data->salt = $request->input('salt');
+        $data = User::find($id);
+        if($data) {
+            $data->name = $request->input('name');
             $data->email = $request->input('email');
-            $data->profile = $request->input('profile');
+            $data->password = Hash::make($request->input('password'));
             $data->save();
-
-            Log::info('Updating author by id');
 
             return response()->json([
                 "message" => "Success Updated",
                 "results" => $data
-            ]);        
+            ]);
         }else {
             return response()->json([
                 "message" => "Parameter Not Found"
             ]);
-        }
-
+        }        
     }
 
     public function delete($id)
     {
-        $data = Author::find($id);
+        $data = User::find($id);
         if($data) {
             $data->delete();
-
-            Log::info('Deleting author by id');
 
             return response()->json([
                 "message" => "Success Deleted",
                 "results" => $data
-            ]);   
+            ]);
         }else {
             return response()->json([
                 "message" => "Parameter Not Found"
             ]);
-        }
+        }        
     }
 }
